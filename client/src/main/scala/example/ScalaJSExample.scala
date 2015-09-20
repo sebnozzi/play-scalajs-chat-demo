@@ -2,9 +2,12 @@ package example
 
 import scala.scalajs.js
 import org.scalajs.dom
+import org.scalajs.dom.WebSocket
 import shared.SharedMessages
-
 import org.scalajs.jquery._
+import org.scalajs.dom.raw.Event
+import org.scalajs.dom.raw.MessageEvent
+import org.scalajs.dom.raw.ErrorEvent
 
 object ScalaJSExample extends js.JSApp {
 
@@ -21,6 +24,8 @@ object ScalaJSExample extends js.JSApp {
 
     jQuery("#sendForm").submit(onFormSubmit _)
     jQuery("#msg").focus()
+
+    connectWebSocket()
   }
 
   def sendMsg(msg: String): Unit = {
@@ -36,6 +41,26 @@ object ScalaJSExample extends js.JSApp {
         println("Error sending")
       }).asInstanceOf[org.scalajs.jquery.JQueryAjaxSettings]
     jQuery.ajax(ajaxSettings)
+  }
+
+  def connectWebSocket(): Unit = {
+    val socket = new WebSocket("ws://localhost:9000/socket")
+
+    socket.onopen = { (e: Event) =>
+      println("Connected to server via WebSocket")
+    }
+
+    socket.onclose = { (e: Event) =>
+      println("The server closed our WebSocket")
+    }
+
+    socket.onerror = { (e: ErrorEvent) =>
+      println("Error with the WebSocket")
+    }
+
+    socket.onmessage = { (e: MessageEvent) =>
+      println("The server closed our WebSocket")
+    }
   }
 
 }
