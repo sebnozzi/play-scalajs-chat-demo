@@ -10,9 +10,10 @@ import scala.collection.mutable
 object ChatServer {
   lazy val instance: ActorRef = Akka.system.actorOf(Props[ChatServer], name = "chat_server_actor")
 
-  case class Login(user: ActorRef)
-  case class Logout(user: ActorRef)
-  case class Broadcast(sender: ActorRef, msg: String)
+  case class Login()
+  case class Logout()
+  case class Broadcast(msg: String)
+  case class ChatMsg(msg: String)
 }
 
 class ChatServer extends Actor {
@@ -21,13 +22,15 @@ class ChatServer extends Actor {
   private val users = mutable.Set[ActorRef]()
 
   override def receive = {
-    case Login(user) =>
-      users += user
-    case Logout(user) =>
-      users -= user
-    case Broadcast(sender, msg) =>
-      for (otherUser <- users.filterNot(_ == sender)) {
-        otherUser ! msg
+    case Login() =>
+      users += sender
+      println("Added user")
+    case Logout() =>
+      users -= sender
+      println("Removed user")
+    case Broadcast(msg) =>
+      for (user <- users) {
+        user ! ChatMsg(msg)
       }
   }
 

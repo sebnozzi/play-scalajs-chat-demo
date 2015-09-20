@@ -5,6 +5,7 @@ import shared.SharedMessages
 import play.api.Play.current
 import akka.actor._
 import actors.ChatUserActor
+import actors.ChatServer
 
 
 object Application extends Controller {

@@ -6,17 +6,22 @@ import akka.actor.ActorRef
 import akka.actor.actorRef2Scala
 
 object ChatUserActor {
-  def props(out: ActorRef) = Props(new ChatUserActor(out))
+  def chatServer = ChatServer.instance
+  def props(webClient: ActorRef) = Props(new ChatUserActor(webClient, chatServer))
 }
 
-class ChatUserActor(out: ActorRef) extends Actor {
+class ChatUserActor(webClient: ActorRef, chatServer:ActorRef) extends Actor {
 
+  override def preStart() = chatServer ! ChatServer.Login()
+  override def postStop() = chatServer ! ChatServer.Logout()
+  
   def receive = {
-    case msg: String =>
-      out ! msg
+    case rawMsg : String => 
+      chatServer ! ChatServer.Broadcast(rawMsg)
+    case ChatServer.ChatMsg(msg) =>
+      webClient ! msg
   }
 
-  override def postStop() = {
-    println("The websocket has been closed")
-  }
+
+  
 }

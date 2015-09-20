@@ -11,6 +11,8 @@ import org.scalajs.dom.raw.ErrorEvent
 
 object ScalaJSExample extends js.JSApp {
 
+  var optSocket: Option[WebSocket] = None
+
   def main(): Unit = {
     dom.document.getElementById("scalajsShoutOut").textContent = SharedMessages.itWorks
 
@@ -25,14 +27,19 @@ object ScalaJSExample extends js.JSApp {
     jQuery("#sendForm").submit(onFormSubmit _)
     jQuery("#msg").focus()
 
-    connectWebSocket()
+    optSocket = connectWebSocket()
   }
-  
-  def addMessageToUI(msg:String):Unit = {
+
+  def addMessageToUI(msg: String): Unit = {
     jQuery("#messages").prepend(s"<li>$msg</li>")
   }
 
-  def sendMsg(msg: String): Unit = {
+  def sendMsg(msg: String): Unit =
+    for (socket <- optSocket) {
+      socket.send(msg)
+    }
+
+  def postMsg(msg: String): Unit = {
     val ajaxSettings = js.Dynamic.literal(
       url = "/sendMsg",
       contentType = "text/plain",
@@ -48,7 +55,7 @@ object ScalaJSExample extends js.JSApp {
     jQuery.ajax(ajaxSettings)
   }
 
-  def connectWebSocket(): Unit = {
+  def connectWebSocket(): Option[WebSocket] = {
     val socket = new WebSocket("ws://localhost:9000/socket")
 
     socket.onopen = { (e: Event) =>
@@ -64,8 +71,10 @@ object ScalaJSExample extends js.JSApp {
     }
 
     socket.onmessage = { (e: MessageEvent) =>
-      println("The server closed our WebSocket")
+      addMessageToUI(e.data.toString())
     }
+
+    Some(socket)
   }
 
 }
