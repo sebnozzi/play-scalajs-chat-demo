@@ -4,7 +4,7 @@ import play.api.mvc._
 import shared.SharedMessages
 import play.api.Play.current
 import akka.actor._
-import actors.MyWebSocketActor
+import actors.ChatUserActor
 
 
 object Application extends Controller {
@@ -22,7 +22,7 @@ object Application extends Controller {
   // Taken from https://www.playframework.com/documentation/2.4.x/ScalaWebSockets
 
   def socket = WebSocket.acceptWithActor[String, String] { request => out =>
-    MyWebSocketActor.props(out)
+    ChatUserActor.props(out)
   }
 
 }

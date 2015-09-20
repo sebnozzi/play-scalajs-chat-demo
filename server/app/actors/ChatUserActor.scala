@@ -5,15 +5,15 @@ import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.actorRef2Scala
 
-object MyWebSocketActor {
-  def props(out: ActorRef) = Props(new MyWebSocketActor(out))
+object ChatUserActor {
+  def props(out: ActorRef) = Props(new ChatUserActor(out))
 }
 
-class MyWebSocketActor(out: ActorRef) extends Actor {
+class ChatUserActor(out: ActorRef) extends Actor {
 
   def receive = {
     case msg: String =>
-      out ! ("I received your message: " + msg)
+      out ! msg
   }
 
   override def postStop() = {
