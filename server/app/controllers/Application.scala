@@ -4,6 +4,7 @@ import play.api.mvc._
 import shared.SharedMessages
 import play.api.Play.current
 import akka.actor._
+import actors.MyWebSocketActor
 
 
 object Application extends Controller {

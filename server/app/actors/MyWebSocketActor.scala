@@ -1,8 +1,9 @@
-package controllers
+package actors
 
 import akka.actor.Props
 import akka.actor.Actor
 import akka.actor.ActorRef
+import akka.actor.actorRef2Scala
 
 object MyWebSocketActor {
   def props(out: ActorRef) = Props(new MyWebSocketActor(out))
