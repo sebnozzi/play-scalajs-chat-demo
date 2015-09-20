@@ -12,10 +12,7 @@ lazy val server = (project in file("server")).settings(
     "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
     "org.webjars" % "jquery" % "1.11.1",
     specs2 % Test
-  ),
-  // Heroku specific
-  herokuAppName in Compile := "your-heroku-app-name",
-  herokuSkipSubProjects in Compile := false
+  )
 ).enablePlugins(PlayScala).
   aggregate(clients.map(projectToRef): _*).
   dependsOn(sharedJvm)
@@ -25,7 +22,8 @@ lazy val client = (project in file("client")).settings(
   persistLauncher := true,
   persistLauncher in Test := false,
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.8.0"
+    "org.scala-js" %%% "scalajs-dom" % "0.8.0",
+    "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSPlay).
   dependsOn(sharedJs)
