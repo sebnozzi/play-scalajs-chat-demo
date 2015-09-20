@@ -27,6 +27,10 @@ object ScalaJSExample extends js.JSApp {
 
     connectWebSocket()
   }
+  
+  def addMessageToUI(msg:String):Unit = {
+    jQuery("#messages").prepend(s"<li>$msg</li>")
+  }
 
   def sendMsg(msg: String): Unit = {
     val ajaxSettings = js.Dynamic.literal(
@@ -36,6 +40,7 @@ object ScalaJSExample extends js.JSApp {
       `type` = "POST",
       success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
         println(s"Server says: $data")
+        addMessageToUI(msg) // we may add our own message
       },
       error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
         println("Error sending")
