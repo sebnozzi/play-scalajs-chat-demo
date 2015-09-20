@@ -39,21 +39,21 @@ object ScalaJSExample extends js.JSApp {
       socket.send(msg)
     }
 
-  def postMsg(msg: String): Unit = {
-    val ajaxSettings = js.Dynamic.literal(
-      url = "/sendMsg",
-      contentType = "text/plain",
-      data = msg,
-      `type` = "POST",
-      success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
-        println(s"Server says: $data")
-        addMessageToUI(msg) // we may add our own message
-      },
-      error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
-        println("Error sending")
-      }).asInstanceOf[org.scalajs.jquery.JQueryAjaxSettings]
-    jQuery.ajax(ajaxSettings)
-  }
+  //  def postMsg(msg: String): Unit = {
+  //    val ajaxSettings = js.Dynamic.literal(
+  //      url = "/sendMsg",
+  //      contentType = "text/plain",
+  //      data = msg,
+  //      `type` = "POST",
+  //      success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
+  //        println(s"Server says: $data")
+  //        addMessageToUI(msg) // we may add our own message
+  //      },
+  //      error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
+  //        println("Error sending")
+  //      }).asInstanceOf[org.scalajs.jquery.JQueryAjaxSettings]
+  //    jQuery.ajax(ajaxSettings)
+  //  }
 
   def connectWebSocket(): Option[WebSocket] = {
     val socket = new WebSocket("ws://localhost:9000/socket")
@@ -75,6 +75,25 @@ object ScalaJSExample extends js.JSApp {
     }
 
     Some(socket)
+  }
+
+}
+
+object AjaxPost {
+
+  def post(data: js.Any): Unit = {
+    val ajaxSettings = js.Dynamic.literal(
+      url = "/sendMsg",
+      contentType = "text/plain",
+      data = data,
+      `type` = "POST",
+      success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
+        println(s"Server says: $data")
+      },
+      error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
+        println("Error sending")
+      }).asInstanceOf[org.scalajs.jquery.JQueryAjaxSettings]
+    jQuery.ajax(ajaxSettings)
   }
 
 }
