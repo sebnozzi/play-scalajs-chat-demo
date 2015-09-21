@@ -11,7 +11,7 @@ lazy val server = (project in file("server")).settings(
   libraryDependencies ++= Seq(
     "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
     "org.webjars" % "jquery" % "1.11.1",
-    specs2 % Test
+    "com.lihaoyi" %% "upickle" % "0.3.6"
   )
 ).enablePlugins(PlayScala).
   aggregate(clients.map(projectToRef): _*).
@@ -23,7 +23,8 @@ lazy val client = (project in file("client")).settings(
   persistLauncher in Test := false,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-    "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
+    "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
+    "com.lihaoyi" %%% "upickle" % "0.3.6"
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSPlay).
   dependsOn(sharedJs)
