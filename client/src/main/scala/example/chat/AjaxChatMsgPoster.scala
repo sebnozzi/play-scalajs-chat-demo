@@ -1,16 +1,22 @@
-package example
+package example.chat
 
 import scala.scalajs.js
 import org.scalajs.jquery._
+import shared.SharedMessages
+import upickle.default._
+import scala.scalajs.js.Any.fromFunction3
+import scala.scalajs.js.Any.fromString
 
 
-object AjaxPostExample {
 
-  def post(data: js.Any): Unit = {
+object AjaxChatMsgPoster {
+
+  def postMsg(chatMsg: SharedMessages.ChatMsg): Unit = {
+    val jsonStr = write(chatMsg)
     val ajaxSettings = js.Dynamic.literal(
-      url = "/sendMsg",
-      contentType = "text/plain",
-      data = data,
+      url = "/postMsg",
+      contentType = "application/json", // NOTE: should be JSON
+      data = jsonStr,
       `type` = "POST",
       success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
         println(s"Server says: $data")

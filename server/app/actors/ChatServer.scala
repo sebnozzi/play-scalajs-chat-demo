@@ -24,10 +24,10 @@ class ChatServer extends Actor {
   override def receive = {
     case Login() =>
       users += sender
-      println("Added user")
+      println("Logged-in user")
     case Logout() =>
       users -= sender
-      println("Removed user")
+      println("Logged-out user")
     case Broadcast(msg) =>
       for (user <- users) {
         user ! ChatMsg(msg)

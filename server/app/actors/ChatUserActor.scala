@@ -18,12 +18,18 @@ class ChatUserActor(webClient: ActorRef, chatServer:ActorRef) extends Actor {
   override def postStop() = chatServer ! ChatServer.Logout()
   
   def receive = {
-    case rawString : String => 
+    // Gets message FROM web-client
+    case rawJsonString : String => 
+      println(s"Got via WebSocket: $rawJsonString")
       // This could fail...
-      val chatMsg = read[SharedMessages.ChatMsg](rawString)
+      val chatMsg = read[SharedMessages.ChatMsg](rawJsonString)
+      // Tell the server to broadcast the message
       chatServer ! ChatServer.Broadcast(chatMsg.txt)
-    case ChatServer.ChatMsg(msg) =>
-      webClient ! msg
+    
+    // Sends message back to the web-client
+    case chatMsg @ ChatServer.ChatMsg(txt) =>
+      val jsonStr = write(SharedMessages.ChatMsg(txt))
+      webClient ! jsonStr
   }
 
 

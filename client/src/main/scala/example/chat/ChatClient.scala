@@ -1,48 +1,28 @@
-package example
+package example.chat
 
-import scala.scalajs.js
-import org.scalajs.dom
 import org.scalajs.dom.WebSocket
 import shared.SharedMessages
-import shared.SharedMessages.ChatMsg
-
 import org.scalajs.jquery._
 import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
 import org.scalajs.dom.raw.ErrorEvent
 import upickle.default._
+import scala.scalajs.js.Any.fromFunction1
+import scala.scalajs.js.Any.fromString
 
-object ChatExample {
-  
+class ChatClient(onMessage: (SharedMessages.ChatMsg) => Any) {
   private var optSocket: Option[WebSocket] = None
-  
-  def doIt(): Unit = {
 
-    def onFormSubmit(ev: JQueryEventObject): js.Any = {
-      val msg = jQuery("#msg").value().toString()
-      sendMsg(msg)
-      jQuery("#msg").value("")
-      jQuery("#msg").focus()
-      false // don't actually submit the form
-    }
+  connectWebSocket()
 
-    jQuery("#sendForm").submit(onFormSubmit _)
-    jQuery("#msg").focus()
-
-    connectWebSocket()
-  }
-
-  def addMessageToUI(msg: String): Unit = {
-    jQuery("#messages").prepend(s"<li>$msg</li>")
-  }
-
-  def sendMsg(textMsg: String): Unit =
+  def sendMsg(msg: SharedMessages.ChatMsg): Unit = {
     for (socket <- optSocket) {
-      val json = write(ChatMsg(textMsg))
+      val json = write(msg)
       socket.send(json)
     }
+  }
 
-  def connectWebSocket():Unit = {
+  def connectWebSocket(): Unit = {
     val socket = new WebSocket("ws://localhost:9000/socket")
 
     socket.onopen = { (e: Event) =>
@@ -60,9 +40,15 @@ object ChatExample {
     }
 
     socket.onmessage = { (e: MessageEvent) =>
-      addMessageToUI(e.data.toString())
+      val rawJsonStr = e.data.toString()
+      try {
+        val chatMsg = read[SharedMessages.ChatMsg](rawJsonStr)
+        onMessage(chatMsg)
+      } catch {
+        case e: upickle.Invalid =>
+          println(s"Invalid JSON: $rawJsonStr")
+      }
     }
   }
-  
-  
+
 }

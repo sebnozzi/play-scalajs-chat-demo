@@ -1,11 +1,8 @@
 package controllers
 
+import play.api.Play.current
 import play.api.mvc._
 import shared.SharedMessages
-import play.api.Play.current
-import akka.actor._
-import actors.ChatUserActor
-import actors.ChatServer
 
 object Application extends Controller {
 
@@ -13,16 +10,5 @@ object Application extends Controller {
     Ok(views.html.index(SharedMessages.itWorks))
   }
 
-  // Taken from https://www.playframework.com/documentation/2.4.x/ScalaWebSockets
-  def socket = WebSocket.acceptWithActor[String, String] { request =>
-    out =>
-      ChatUserActor.props(out)
-  }
-
-  def postMsg = Action { request =>
-    val msg = request.body.asText.getOrElse("")
-    println(s"Scala.js says: $msg")
-    Ok(s"<<Play got: $msg>>")
-  }
 
 }
