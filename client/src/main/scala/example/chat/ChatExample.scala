@@ -1,8 +1,5 @@
 package example.chat
 
-import shared.SharedMessages
-import org.scalajs.jquery._
-import upickle.default._
 
 object ChatExample {
 
@@ -17,14 +14,17 @@ object ChatExample {
     _ui = new ChatUI(onUserInput = sendMsgToServer)
   }
 
-  private def addMsgToUI(msg: SharedMessages.ChatMsg): Unit = {
+  private def addMsgToUI(msg: shared.ChatMsg): Unit = {
     ui.showMsg(msg)
   }
 
   private def sendMsgToServer(userText: String): Unit = {
-    val chatMsg = SharedMessages.ChatMsg(userText)
-    // client.sendMsg(chatMsg)
-    AjaxChatMsgPoster.postMsg(chatMsg)
+    val chatMsg = shared.ChatMsg(userText)
+    
+    if(ui.isPostSendingSelected)
+      AjaxChatMsgPoster.postMsg(chatMsg)
+    else
+      client.sendMsg(chatMsg)
   }
 
 }

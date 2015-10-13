@@ -1,17 +1,18 @@
 package example.chat
 
 import scala.scalajs.js
-import shared.SharedMessages
 import org.scalajs.jquery._
-import upickle.default._
+import org.scalajs.dom.document
 import scala.scalajs.js.Any.fromBoolean
-import scala.scalajs.js.Any.fromFunction1
-import scala.scalajs.js.Any.fromString
+
 
 class ChatUI(onUserInput: (String) => Any) {
 
   prevetFormSubmit()
-  resetInput()
+
+  jQuery(document).ready(() => {
+    resetInput()
+  })
 
   def prevetFormSubmit(): Unit =
     jQuery("#sendForm").submit(onFormSubmit _)
@@ -31,7 +32,12 @@ class ChatUI(onUserInput: (String) => Any) {
     false // don't actually submit the form
   }
 
-  def showMsg(msg: SharedMessages.ChatMsg): Unit =
-    jQuery("#messages").prepend(s"<li>${msg.txt}</li>")
+  def showMsg(msg: shared.ChatMsg): Unit =
+    jQuery("#messages").prepend(s"""<div class="well">${msg.txt}</div>""")
 
+  def isPostSendingSelected:Boolean = {
+    val selectedValue = jQuery("input[name='sendMethod'][type='radio']:checked").value().toString()
+    selectedValue == "post"
+  }
+    
 }

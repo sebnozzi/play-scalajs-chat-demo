@@ -1,20 +1,28 @@
-@(message: String)
 
-@main("Play with Scala.js") {
-
+@main("Chat-Demo (Play/Scala.js)") {
 
 <h2>Chat Demo</h2>
 
 <div>
   <form id="sendForm">
 	  <input id="msg" type="text"/>
-	  <button id="sendButton" type="submit">Send!</button>
+	  <button class="btn btn-default" id="sendButton" type="submit">Send!</button>
+	  <div class="method-selection">
+	   <p>
+		   <input type="radio" name="sendMethod" id="sebdViaPost" value="post" checked="checked"/> 
+		   <label for="sebdViaPost">Send via POST</label>
+	   </p>
+     <p>
+      <input type="radio" name="sendMethod" id="sendViaSocket" value="socket"/>
+      <label for="sendViaSocket">Send via WebSocket</label>
+     </p>
+	  </div>
   </form> 
 </div>
 
-<div>
-  <ul id="messages">
-  </ul>
+<h3>Messages</h3>
+
+<div id="messages">
 </div>
 
 }

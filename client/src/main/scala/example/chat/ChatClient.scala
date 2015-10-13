@@ -1,54 +1,56 @@
 package example.chat
 
 import org.scalajs.dom.WebSocket
-import shared.SharedMessages
-import org.scalajs.jquery._
 import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.MessageEvent
-import org.scalajs.dom.raw.ErrorEvent
+import org.scalajs.dom.window
 import upickle.default._
 import scala.scalajs.js.Any.fromFunction1
 import scala.scalajs.js.Any.fromString
 
-class ChatClient(onMessage: (SharedMessages.ChatMsg) => Any) {
+
+class ChatClient(onMessage: (shared.ChatMsg) => Any) {
   private var optSocket: Option[WebSocket] = None
 
   connectWebSocket()
 
-  def sendMsg(msg: SharedMessages.ChatMsg): Unit = {
+  def sendMsg(msg: shared.ChatMsg): Unit = {
     for (socket <- optSocket) {
-      val json = write(msg)
+      val json = write(shared.MessageTypedEvent(msg))
       socket.send(json)
     }
   }
 
   def connectWebSocket(): Unit = {
-    val socket = new WebSocket("ws://localhost:9000/socket")
+
+    val host = window.location.hostname
+    val port = {
+      val p = window.location.port
+      if (p.isEmpty)
+        ""
+      else ":" + p
+    }
+    val wsProtocol = {
+      val p = window.location.protocol
+      if (p.startsWith("https"))
+        "wss"
+      else
+        "ws"
+    }
+
+    val socket = new WebSocket(s"$wsProtocol://$host$port/socket")
 
     socket.onopen = { (e: Event) =>
       println("Connected to server via WebSocket")
       optSocket = Some(socket)
     }
-
-    socket.onclose = { (e: Event) =>
-      println("The server closed our WebSocket")
-      optSocket = None
-    }
-
-    socket.onerror = { (e: ErrorEvent) =>
-      println("Error with the WebSocket")
-    }
-
+    
     socket.onmessage = { (e: MessageEvent) =>
       val rawJsonStr = e.data.toString()
-      try {
-        val chatMsg = read[SharedMessages.ChatMsg](rawJsonStr)
-        onMessage(chatMsg)
-      } catch {
-        case e: upickle.Invalid =>
-          println(s"Invalid JSON: $rawJsonStr")
-      }
+      val showMsgCmd = read[shared.ShowMessageCmd](rawJsonStr)
+      onMessage(showMsgCmd.msg)
     }
+
   }
 
 }

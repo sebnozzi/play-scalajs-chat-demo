@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 POST    /postMsg                    controllers.ChatController.postMsg
-GET     /socket                     controllers.ChatController.socket
+GET     /socket                     controllers.ChatController.connectToSocket
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
