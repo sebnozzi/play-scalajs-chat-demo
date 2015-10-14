@@ -31,7 +31,8 @@ object ChatController extends Controller {
       val msgTypedEvt = read[shared.MessageTypedEvent](jsonStr)
       val chatMsg = msgTypedEvt.msg
       ChatServer.instance ! actors.BroadcastCmd(chatMsg)
-      Ok(s"Play got -> $jsonStr via POST")
+      val responseJsonStr = write(shared.MessageReceived())
+      Ok(responseJsonStr).as(JSON)
     } catch {
       case e: upickle.Invalid =>
         BadRequest(s"Incoming JSON could not be de-pickled: $jsonStr")
