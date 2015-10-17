@@ -1,11 +1,21 @@
-package com.sebnozzi.scalajs.comm
+package com.sebnozzi.scalajs.communication.ajax
 
+import com.sebnozzi.scalajs.communication.serialization.JsonSerialization
 import org.scalajs.jquery._
 
 import scala.scalajs.js
 
 /**
- * Created by sebnozzi on 13/10/15.
+ * Abstract class.
+ *
+ * Performs POST-requests of specific types, awaiting responses of other
+ * specific type.
+ *
+ * Concrete classes have to provide a way to serialize from Scala-types
+ * to JSON and back.
+ *
+ * Also to be provided is the relative-URL to send the requests to.
+ *
  */
 abstract class AjaxPoster[TO_SERVER, FROM_SERVER] extends JsonSerialization[TO_SERVER, FROM_SERVER] {
 

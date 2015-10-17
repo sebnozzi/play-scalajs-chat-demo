@@ -1,13 +1,11 @@
 package controllers
 
-import actors.ChatClientActor
-import play.api.Play.current
+import actors.{ChatClientActor, ChatServer}
 import play.api.Logger
-import play.api.mvc._
-import actors.ChatServer
+import play.api.Play.current
 import play.api.libs.json._
+import play.api.mvc._
 import upickle.default._
-
 
 object ChatController extends Controller {
 
@@ -18,21 +16,24 @@ object ChatController extends Controller {
       ChatClientActor.props(out)
   }
 
-  def postMsg = Action { request =>
-    request.body.asJson.fold(ifEmpty = BadRequest("Missing or invalid JSON")) {
-      jsValue => processPostedJson(jsValue)
-    }
+  def postMsg = Action(parse.json) { request =>
+    processPostedJson(request.body)
   }
 
-  def processPostedJson(jsValue: JsValue) = {
+  private def processPostedJson(jsValue: JsValue): Result = {
     val jsonStr = Json.stringify(jsValue)
     Logger.debug(s"Scala.js says: $jsonStr")
+
     try {
+
       val msgTypedEvt = read[shared.MessageTypedEvent](jsonStr)
       val chatMsg = msgTypedEvt.msg
+
       ChatServer.instance ! actors.BroadcastCmd(chatMsg)
+
       val responseJsonStr = write(shared.MessageReceived())
       Ok(responseJsonStr).as(JSON)
+
     } catch {
       case e: upickle.Invalid =>
         BadRequest(s"Incoming JSON could not be de-pickled: $jsonStr")

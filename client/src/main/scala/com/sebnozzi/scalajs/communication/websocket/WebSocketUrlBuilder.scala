@@ -1,9 +1,17 @@
-package com.sebnozzi.scalajs.comm
+package com.sebnozzi.scalajs.communication.websocket
 
 import org.scalajs.dom._
 
 /**
- * Created by sebnozzi on 14/10/15.
+ * Helper object that constructs a web-socket URL
+ * from a relative-URL.
+ *
+ * Important in doing this is:
+ * - that the resulting URL has to be absolute.
+ * - because of this the port-number has to be included.
+ * - the web-socket protocol (ws/wss) has to correspond
+ *   to the http one (http/https).
+ *
  */
 object WebSocketUrlBuilder {
   private val host = window.location.hostname
