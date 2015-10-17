@@ -1,4 +1,4 @@
-@@ -1,54 +0,0 @@
+
 # Play/Scala.js "chat" Demo
 
 This is a simple example application showing how you can integrate a Play project with a Scala.js project.
