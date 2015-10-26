@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
   <script src="@routes.Assets.at("lib/jquery/jquery.min.js")"></script>
+
   @if(usingAngular) {
     <script src="@routes.Assets.at("lib/angularjs/angular.js")"></script>
   }
@@ -25,7 +26,7 @@
 
 @angularAttr() = {
   @if(usingAngular) {
-    ng-app="chat-ui" data-framework="angularjs"
+    ng-app="chat-demo" data-framework="angularjs"
   } else {
   }
 }

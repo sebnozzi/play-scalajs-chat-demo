@@ -1,7 +1,6 @@
 package com.sebnozzi.scalajs.example.chatclient.ui.jquery
 
 import com.sebnozzi.scalajs.sanitizer._
-import com.sebnozzi.scalajs.example.chatclient.ui.ChatUI
 
 import org.scalajs.dom.document
 import org.scalajs.jquery._
@@ -13,24 +12,23 @@ import scala.scalajs.js.Any.fromBoolean
 /**
  * Manages all UI aspects, like reacting to
  * UI events, interacting with the form, etc.
- * */
-class JQueryChatUI(messageTypedCallback: (String) => Any) extends ChatUI {
+ **/
+class JQueryChatUI(messageTypedCallback: (String) => Any) {
 
   init()
 
-  override def addChatMsg(msg: shared.ChatMsg): Unit = {
+  def addChatMsg(msg: shared.ChatMsg): Unit = {
     val unsanitizedTxt = msg.txt
     val sanitizedTxt = sanitizeHTML(unsanitizedTxt)
     jQuery("#messages").prepend( s"""<li><div class="well">${sanitizedTxt}</div></li>""")
   }
 
-  override def isPostSendingSelected: Boolean = {
+  def isPostSendingSelected: Boolean = {
     val selectedValue = jQuery("input[name='sendMethod'][type='radio']:checked").value().toString()
     selectedValue == "post"
   }
 
-
-  private def init():Unit = {
+  private def init(): Unit = {
     preventFormSubmit()
 
     jQuery(document).ready(() => {
@@ -40,7 +38,7 @@ class JQueryChatUI(messageTypedCallback: (String) => Any) extends ChatUI {
   }
 
   private def preventFormSubmit(): Unit =
-  jQuery("#sendForm").submit(onFormSubmit _)
+    jQuery("#sendForm").submit(onFormSubmit _)
 
   private def initSendingMethod() = {
     jQuery("#sendViaPost").attr("checked", "checked")
@@ -60,7 +58,6 @@ class JQueryChatUI(messageTypedCallback: (String) => Any) extends ChatUI {
     resetInput()
     false // don't actually submit the form
   }
-
 
 
 }

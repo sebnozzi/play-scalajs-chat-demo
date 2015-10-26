@@ -1,9 +1,12 @@
 package com.sebnozzi.scalajs.example.chatclient
 
+import com.greencatsoft.angularjs.Angular
+import com.sebnozzi.scalajs.example.chatclient.communication.angular.{AngularChatClientFactory, AngularMsgPostServiceFactory}
 import com.sebnozzi.scalajs.example.chatclient.communication.{ChatClient, ChatMsgPoster}
-import com.sebnozzi.scalajs.example.chatclient.ui.{ChatUIFactory, ChatUI}
-import com.sebnozzi.scalajs.example.chatclient.ui.angular.AngularChatUI
+import com.sebnozzi.scalajs.example.chatclient.ui
+import com.sebnozzi.scalajs.example.chatclient.ui.angular.ChatCtrl
 import com.sebnozzi.scalajs.example.chatclient.ui.jquery.JQueryChatUI
+import org.scalajs.dom
 
 import scala.scalajs.js
 
@@ -21,27 +24,49 @@ import scala.scalajs.js
  */
 object ChatExampleApp extends js.JSApp {
 
-  private var client: ChatClient = _
-  private var ui: ChatUI = _
-
   def main(): Unit = {
-    client = new ChatClient(onMessage = addMsgToUI)
-    ui = ChatUIFactory.buildInstance(messageTypedCallback = sendMsgToServer)
-
-    client.connect()
+    if (isUsingAngular) {
+      initAngular()
+    } else {
+      initJQuery()
+    }
   }
 
-  private def addMsgToUI(msg: shared.ChatMsg): Unit = {
-    ui.addChatMsg(msg)
+  def isUsingAngular: Boolean = {
+    val htmlTag = dom.document.getElementsByTagName("html")(0)
+    htmlTag.attributes.getNamedItem("ng-app") != null
   }
 
-  private def sendMsgToServer(userText: String): Unit = {
-    val chatMsg = shared.ChatMsg(userText)
+  def initAngular(): Unit = {
+    val module = Angular.module("chat-demo")
 
-    if (ui.isPostSendingSelected)
-      ChatMsgPoster.postMsg(chatMsg)
-    else
-      client.sendMsg(chatMsg)
+    module.factory[AngularMsgPostServiceFactory]
+    module.factory[AngularChatClientFactory]
+
+    module.controller(ChatCtrl)
+  }
+
+  def initJQuery(): Unit = {
+    class JQueryApp {
+      private val client = new ChatClient(onMessage = addMsgToUI)
+      private val ui = new JQueryChatUI(messageTypedCallback = sendMsgToServer)
+
+      client.connect()
+
+      def addMsgToUI(msg: shared.ChatMsg): Unit = {
+        ui.addChatMsg(msg)
+      }
+
+      def sendMsgToServer(userText: String): Unit = {
+        val chatMsg = shared.ChatMsg(userText)
+
+        if (ui.isPostSendingSelected)
+          ChatMsgPoster.postMsg(chatMsg)
+        else
+          client.sendMsg(chatMsg)
+      }
+    }
+    new JQueryApp()
   }
 
 }

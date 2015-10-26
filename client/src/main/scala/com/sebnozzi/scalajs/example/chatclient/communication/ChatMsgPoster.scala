@@ -15,7 +15,7 @@ object ChatMsgPoster {
     extends AjaxPoster[shared.MessageTypedEvent, shared.MessageReceived]
     with ChatMsgPosterSerialization {
 
-    override val postRelativeUrl = "/postMsg"
+    override val postRelativeUrl = ServerURLs.postMsgURL
 
     override protected def onSuccess(responseData: shared.MessageReceived, textStatus: String): Unit = {
       println("POST succeeded")

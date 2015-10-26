@@ -20,7 +20,7 @@ class ChatClient(onMessage: (shared.ChatMsg) => Any) {
     extends WebSocketClient[shared.MessageTypedEvent, shared.ShowMessageCmd]
     with ChatClientSerialization {
 
-    override lazy val relativeSocketUrl = "/socket"
+    override lazy val relativeSocketUrl = ServerURLs.socketURL
 
     override def receive(showMsgCmd: shared.ShowMessageCmd): Unit = {
       onMessage(showMsgCmd.msg)
