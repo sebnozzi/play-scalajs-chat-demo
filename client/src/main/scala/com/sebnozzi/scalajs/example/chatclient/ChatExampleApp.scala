@@ -1,7 +1,9 @@
 package com.sebnozzi.scalajs.example.chatclient
 
 import com.sebnozzi.scalajs.example.chatclient.communication.{ChatClient, ChatMsgPoster}
-import com.sebnozzi.scalajs.example.chatclient.ui.jquery.ChatUI
+import com.sebnozzi.scalajs.example.chatclient.ui.{ChatUIFactory, ChatUI}
+import com.sebnozzi.scalajs.example.chatclient.ui.angular.AngularChatUI
+import com.sebnozzi.scalajs.example.chatclient.ui.jquery.JQueryChatUI
 
 import scala.scalajs.js
 
@@ -16,10 +18,6 @@ import scala.scalajs.js
  * It communicates either via web-sockets or AJAX
  * (POST) requests.
  *
- * It updates its UI using jQuery, making use of the
- * type-safe wrappers provided by the corresponding
- * Scala.js library.
- *
  */
 object ChatExampleApp extends js.JSApp {
 
@@ -28,7 +26,7 @@ object ChatExampleApp extends js.JSApp {
 
   def main(): Unit = {
     client = new ChatClient(onMessage = addMsgToUI)
-    ui = new ChatUI(onUserInput = sendMsgToServer)
+    ui = ChatUIFactory.buildInstance(messageTypedCallback = sendMsgToServer)
 
     client.connect()
   }

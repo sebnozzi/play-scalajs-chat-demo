@@ -1,28 +1,54 @@
+@(usingAngular: Boolean)
 
-@main("Chat-Demo (Play/Scala.js)") {
+@main("Chat-Demo (Play/Scala.js)", usingAngular) {
+  <h2>Chat Demo
+    @if(usingAngular) {
+      (AngularJS)
+    } else {
+      (jQuery)
+    }
+  </h2>
 
-<h2>Chat Demo</h2>
+  <div @angularControllerAttr()>
 
-<div>
-  <form id="sendForm">
-	  <input id="msg" type="text"/>
-	  <button class="btn btn-default" id="sendButton" type="submit">Send!</button>
-	  <div class="method-selection">
-	   <p>
-		   <input type="radio" name="sendMethod" id="sebdViaPost" value="post" checked="checked"/> 
-		   <label for="sebdViaPost">Send via POST</label>
-	   </p>
-     <p>
-      <input type="radio" name="sendMethod" id="sendViaSocket" value="socket"/>
-      <label for="sendViaSocket">Send via WebSocket</label>
-     </p>
-	  </div>
-  </form> 
-</div>
+    <div>
+      <form id="sendForm" ng-submit="controller.sendMsg()">
+        <input id="msg" type="text" ng-model="typedMessage" autofocus ng-focus="true"/>
+        <button class="btn btn-default" id="sendButton" type="submit">Send!</button>
 
-<h3>Messages</h3>
+        <div class="method-selection">
+          <p>
+            <input type="radio" name="sendMethod" id="sendViaPost" value="post" ng-model="sendMethod"/>
+            <label for="sendViaPost">Send via POST</label>
+          </p>
+          <p>
+            <input type="radio" name="sendMethod" id="sendViaSocket" value="socket" ng-model="sendMethod"/>
+            <label for="sendViaSocket">Send via WebSocket</label>
+          </p>
+        </div>
 
-<div id="messages">
-</div>
+      </form>
+    </div>
 
+    <div>
+      <h3>Messages</h3>
+      <div>
+        <ul id="messages" class="list-unstyled">
+          @if(usingAngular) {
+          <li ng-repeat="msg in messages track by $index">
+            <div class="well">{{msg}}</div>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+}
+
+@angularControllerAttr() = {
+  @if(usingAngular) {
+    ng-controller="chatCtl"
+  } else {
+  }
 }

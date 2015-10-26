@@ -3,7 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Application.jQueryIndex
+GET     /angular                    controllers.Application.angularIndex
+
 POST    /postMsg                    controllers.ChatController.postMsg
 GET     /socket                     controllers.ChatController.connectToSocket
 
