@@ -1,7 +1,8 @@
-package com.sebnozzi.scalajs.example.chatclient.communication
+package com.sebnozzi.scalajs.example.chatclient.communication.jquery
 
-import com.sebnozzi.scalajs.communication.ajax.AjaxPoster
+import com.sebnozzi.scalajs.communication.jquery.AjaxPoster
 import com.sebnozzi.scalajs.communication.serialization.JsonSerialization
+import com.sebnozzi.scalajs.example.chatclient.communication.ServerURLs
 import upickle.default._
 
 import scala.util.Try

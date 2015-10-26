@@ -2,7 +2,8 @@ package com.sebnozzi.scalajs.example.chatclient
 
 import com.greencatsoft.angularjs.Angular
 import com.sebnozzi.scalajs.example.chatclient.communication.angular.{AngularChatClientFactory, AngularMsgPostServiceFactory}
-import com.sebnozzi.scalajs.example.chatclient.communication.{ChatClient, ChatMsgPoster}
+import com.sebnozzi.scalajs.example.chatclient.communication.jquery.ChatMsgPoster
+import com.sebnozzi.scalajs.example.chatclient.communication.{ChatClient}
 import com.sebnozzi.scalajs.example.chatclient.ui
 import com.sebnozzi.scalajs.example.chatclient.ui.angular.ChatCtrl
 import com.sebnozzi.scalajs.example.chatclient.ui.jquery.JQueryChatUI

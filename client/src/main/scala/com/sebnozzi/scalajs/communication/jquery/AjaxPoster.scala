@@ -1,4 +1,4 @@
-package com.sebnozzi.scalajs.communication.ajax
+package com.sebnozzi.scalajs.communication.jquery
 
 import com.sebnozzi.scalajs.communication.serialization.JsonSerialization
 import org.scalajs.jquery._
