@@ -1,7 +1,7 @@
 package com.sebnozzi.scalajs.example.chatclient
 
 import com.sebnozzi.scalajs.example.chatclient.communication.{ChatClient, ChatMsgPoster}
-import com.sebnozzi.scalajs.example.chatclient.ui.ChatUI
+import com.sebnozzi.scalajs.example.chatclient.ui.jquery.ChatUI
 
 import scala.scalajs.js
 
