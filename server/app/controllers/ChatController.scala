@@ -29,7 +29,9 @@ object ChatController extends Controller {
       val msgTypedEvt = read[shared.MessageTypedEvent](jsonStr)
       val chatMsg = msgTypedEvt.msg
 
-      ChatServer.instance ! actors.BroadcastCmd(chatMsg)
+      if(!chatMsg.isEmpty) {
+        ChatServer.instance ! actors.BroadcastCmd(chatMsg)
+      }
 
       val responseJsonStr = write(shared.MessageReceived())
       Ok(responseJsonStr).as(JSON)

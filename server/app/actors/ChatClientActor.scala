@@ -67,8 +67,10 @@ class ChatClientActor(webClient: ActorRef, chatServer: ActorRef) extends Actor {
 
     case msgTypedEvt: shared.MessageTypedEvent =>
       val chatMsg = msgTypedEvt.msg
-      // Tell the server to broadcast the message
-      chatServer ! BroadcastCmd(chatMsg)
+      if(!chatMsg.isEmpty) {
+        // Tell the server to broadcast the message
+        chatServer ! BroadcastCmd(chatMsg)
+      }
 
     // Sends message back to the web-client
     case showMsgCmd: shared.ShowMessageCmd =>

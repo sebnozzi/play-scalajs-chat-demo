@@ -1,6 +1,8 @@
 package shared
 
-case class ChatMsg(txt: String)
+case class ChatMsg(txt: String) {
+  val isEmpty = txt.trim.isEmpty
+}
 
 abstract sealed class Protocol
 
